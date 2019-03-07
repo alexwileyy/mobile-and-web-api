@@ -1,28 +1,35 @@
-const db = require('../helpers/database-helper');
+const mongoose = require('mongoose');
+
+const taskSchema = mongoose.Schema({
+    userId : Number,
+    taskName : String,
+    createdOn : String,
+    status : String
+}, {collection: 'Tasks'});
+
+const TaskModel = mongoose.model("Task", taskSchema);
 
 /**
  * Get all tasks for a given user from the Tasks table.
+ * @param db
+ * @param userId
  * @returns {Promise<*>}
  */
-exports.getAllTasks = async function(userId){
+exports.getAllTasks = async function(db, userId){
 
     return new Promise(async (resolve, reject)=>{
 
         try{
 
-            // Return the database and client instance from the database helper
-            const [database, client] = await db.establishConnection();
-
-            // Get the tasks from the Tasks collection on the database
-            const users = database.collection('Tasks');
-
-            // Find the user by the user ID from the database
-            users.find({userId: userId}).toArray((err, docs) => {
-                // Close the database connection
-                db.closeConnection(client);
-                // Resolve with the docs
-                resolve(docs);
-            });
+            // Find the task from the collection that matches the user ID
+            TaskModel.find({userId: userId}, (err, result) => {
+                if(err){
+                    // Reject with the error
+                    reject(err);
+                }
+                // Resolve with the result
+                resolve(result);
+            })
 
         } catch(err){
             reject(err);
@@ -42,18 +49,12 @@ exports.getTask = async function(userId, taskId){
     return new Promise(async (resolve, reject)=>{
 
         try{
-            // Return the database and client instance from the database helper
-            const [database, client] = await db.establishConnection();
 
-            // Get the tasks from the Tasks collection on the database
-            const users = database.collection('Tasks');
-
-            // Find the user by the user ID from the database
-            users.find({userId: userId, _id: taskId}).toArray((err, docs) => {
-                // Close the database connection
-                db.closeConnection(client);
-                // Resolve with the docs
-                resolve(docs);
+            TaskModel.findById(taskId).exec((err, result) => {
+                if(err){
+                    resolve(err);
+                }
+                resolve(result);
             });
 
         } catch(err){
@@ -75,26 +76,21 @@ exports.createTask = async function(userId, taskName){
     return new Promise(async (resolve, reject)=>{
 
         try{
-            // Return the database and client instance from the database helper
-            const [database, client] = await db.establishConnection();
-
-            // Get the tasks from the Tasks collection on the database
-            const taskCollection = database.collection('Tasks');
 
             // Create a new object with the data that will be stored to the database.
-            let newTask = {
+            const newTask = new TaskModel({
                 userId: parseInt(userId),
                 taskName,
                 createdOn: '26/02/19',
                 status: 'in-progress'
-            };
+            });
 
-            // Insert the data into the mongodb database
-            taskCollection.insert(newTask, (err, result) => {
-                // Close the connection
-                db.closeConnection(client);
-                // Reolve with the result
-                resolve(result);
+            newTask.save((err, newTask) => {
+                if(err){
+                    console.log(err);
+                    reject(err);
+                }
+                resolve(newTask);
             });
 
         } catch(err){

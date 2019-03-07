@@ -1,4 +1,8 @@
-
+/**
+ * Setup render utility
+ * @param res
+ * @returns {Function}
+ */
 function setupSender(res){
 
     return (statusCode, payload) => {
@@ -8,10 +12,13 @@ function setupSender(res){
         }
 
         if (payload) {
+            let length;
             if(!payload.statusCode) {
                 payload.statusCode = statusCode;
             }
-            return res.status(statusCode).send(payload);
+
+            length = Array.isArray(payload) ? payload.length : 'N/A';
+            return res.status(statusCode).send({date: new Date().toDateString(), payloadLength: length, payload: payload});
         }
 
         return res.status(statusCode).send({"statusCode": statusCode});

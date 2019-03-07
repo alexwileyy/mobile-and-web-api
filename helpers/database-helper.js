@@ -1,5 +1,7 @@
-// A database helper for the mongoDB database
-const MongoClient = require('mongodb').MongoClient;
+const mongoose = require('mongoose');
+mongoose.set('useNewUrlParser', true);
+
+const colors = require('colors');
 
 const url = "mongodb://localhost:27017";
 
@@ -11,18 +13,21 @@ const dbName = 'MobileAndWeb';
  */
 exports.establishConnection = async function() {
     return new Promise(async function(resolve, reject){
-        MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
 
-            if(err){
-                return reject(err);
-            }
+        mongoose.connect(`${url}/${dbName}`);
 
-            const db = client.db(dbName);
-            resolve([db, client]);
+        const db = mongoose.connection;
+        db.once('open', () => {
+            console.log('Successfully connected to database'.green);
+            resolve(db);
         });
+        db.on('error', () => {
+            console.log('Failed to connect to the database instance.'.red);
+            reject();
+        });
+
     });
 };
-
 
 /**
  * Close a mongodb connection

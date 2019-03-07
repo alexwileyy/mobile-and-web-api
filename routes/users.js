@@ -7,6 +7,7 @@ const userModel = require('../models/users');
 router.get('/', async function(req, res, next) {
 
   try {
+
     // Call the getAllUsers method on the userModel to retrieve the data from the database.
     const getUsers = await userModel.getAllUsers();
 

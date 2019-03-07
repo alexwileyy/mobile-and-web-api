@@ -10,6 +10,7 @@ const taskrouter = require('./routes/tasks');
 
 const sender = require('./middleware/sender-middleware');
 const logger = require('./middleware/logger-middleware');
+const db = require('./middleware/database-middleware');
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(sender.addSenderUtility);
 app.use(logger.addLogger);
+app.use(db.addDatabaseConnection);
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
@@ -42,7 +44,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  // res.render('error');
 });
 
 module.exports = app;

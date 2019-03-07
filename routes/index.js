@@ -1,32 +1,64 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-const test = async function(){
-
-  return new Promise((resolve, reject) => {
-
-    setTimeout(function(){
-      // go get data from a database
-
-      resolve("Hello")
-
-    },2000);
-
-  });
+const sayGoodbye = () => {
+    setTimeout(()=>{
+        return "Hello World!";
+    },2000)
 };
 
-/* GET home page. */
-router.get('/test', async function(req, res, next) {
+const sayHello = (squiggle) => {
+    setTimeout(()=>{
+        squiggle("Hello World!");
+    },2000)
+};
 
-  console.log('Before the await')
+const sayHelloAgain = () => {
+    return new Promise((resolve, reject) => {
+        setTimeout(()=>{
+            // resolve("Hello World!");
+            reject("Oh no!")
+        },2000)
+    });
+}
 
-  const hello = await test();
 
-  console.log('After the await')
+const doSomething = async () => {
+    return new Promise((resolve, reject) => {
+        setTimeout(()=>{
+            // resolve("Hello World!");
+            //resolve("I've done something!")
+            reject("Oh dear!")
+        },2000)
+    })
+}
 
-  console.log(hello);
+router.get('/', async function(req, res) {
 
-  res.send(hello);
+    // const text = sayGoodbye();
+    //
+    // sayHello(function(text){
+    //     res.send(text);
+    // });
+
+    // sayHelloAgain()
+    //     .then(response => res.send(response))
+    //     .catch(err => res.status(500).send(err));
+
+    await doSomething();
+
+
+    let something;
+
+    try{
+        await doSomething();
+    } catch(err){
+        res.status(500).send(err);
+    }
+
+    res.send(something);
+
+
 
 });
 
