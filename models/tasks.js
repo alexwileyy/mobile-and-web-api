@@ -100,3 +100,65 @@ exports.createTask = async function(userId, taskName){
 
     });
 };
+
+
+/**
+ * Update Task matched against user and task
+ * @param userId
+ * @param taskId
+ * @param body
+ * @returns {Promise<any>}
+ */
+exports.updateTask = (userId, taskId, body) => {
+
+    return new Promise((resolve, reject) => {
+
+        try{
+            TaskModel.findOneAndUpdate({_id: taskId, userId}, {...body}, (err, doc)=>{
+                if(err){
+                    reject(err);
+                }
+                resolve(doc);
+            })
+        } catch(err){
+            reject(err);
+        }
+
+    });
+
+};
+
+/**
+ * Remove a task from the database
+ * @param userId
+ * @param taskId
+ * @returns {Promise<any>}
+ */
+exports.removeTask = (userId, taskId) => {
+
+    return new Promise((resolve, reject) => {
+
+        try{
+            TaskModel.findById(taskId, (err, found) => {
+                if(err){
+                    reject(err);
+                }
+                if(found && found['userId'] === parseInt(userId)){
+                    TaskModel.findOneAndDelete({_id: taskId, userId}, (err, result) => {
+                        if(err){
+                            reject(err);
+                        }
+                        resolve(`Successfully deleted task (${taskId})`);
+                    })
+                } else {
+                    reject("Cannot delete another users tasks.")
+                }
+            });
+
+        } catch(err) {
+            reject(err);
+        }
+
+    });
+
+};

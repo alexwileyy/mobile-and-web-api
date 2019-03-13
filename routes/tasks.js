@@ -90,10 +90,65 @@ router.post('/:userId', async (req, res, next) => {
 
   } catch(err){
     // Send errors
-    res.sendResponse(500, {'msg': "Unexpected error."});
+    res.sendResponse(500, {'msg': err});
   }
 
 
 });
+
+/* Update a task for a given user. */
+router.patch('/:userId/:taskId', async (req, res, next) => {
+
+  // Get user ID from query param (http://localhost:3000/tasks/{userId}})
+  const userId = req.params['userId'];
+
+  // Get the task ID
+  const taskId = req.params['taskId'];
+
+  if(Object.keys(req.body).length <= 0){
+    res.sendResponse(500, {'msg': "Request must have a body."});
+    return;
+  }
+
+  try {
+    // Call the getAllUsers method on the userModel to retrieve the data from the database.
+    const updateTask = await taskModel.updateTask(userId, taskId, req.body);
+
+    // Send the data back to the client.
+    res.sendResponse(200, updateTask)
+
+  } catch(err){
+    // Send errors
+    console.log(err);
+    res.sendResponse(500, {'msg': err});
+  }
+
+});
+
+/* Delete a task */
+router.delete('/:userId/:taskId', async (req, res, next) => {
+
+  // Get user ID from query param (http://localhost:3000/tasks/{userId}})
+  const userId = req.params['userId'];
+
+  // Get the task ID
+  const taskId = req.params['taskId'];
+
+  try {
+    // Call the getAllUsers method on the userModel to retrieve the data from the database.
+    const removeTask = await taskModel.removeTask(userId, taskId);
+
+    // Send the data back to the client.
+    res.sendResponse(200, removeTask)
+
+  } catch(err){
+    // Send errors
+    console.log(err);
+    res.sendResponse(500, {'msg': err});
+  }
+
+});
+
+
 
 module.exports = router;

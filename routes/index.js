@@ -33,7 +33,11 @@ const doSomething = async () => {
     })
 }
 
-router.get('/', async function(req, res) {
+router.get('/', function(req, res){
+    res.send({message: "Hello"});
+});
+
+router.get('/test', async function(req, res) {
 
     // const text = sayGoodbye();
     //

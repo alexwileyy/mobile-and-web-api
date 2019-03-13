@@ -12,7 +12,7 @@ router.get('/', async function(req, res, next) {
     const getUsers = await userModel.getAllUsers();
 
     // Send the data back to the client.
-    res.sendResponse(200, getUsers);
+    res.sendResponse(200, {});
 
   } catch(err){
     // Send errors
@@ -22,6 +22,7 @@ router.get('/', async function(req, res, next) {
 
 });
 
+/* GET a user by ID. */
 router.get('/:id', async (req, res, next) => {
 
   const id = req.params['id'];

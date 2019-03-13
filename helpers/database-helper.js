@@ -18,7 +18,6 @@ exports.establishConnection = async function() {
 
         const db = mongoose.connection;
         db.once('open', () => {
-            console.log('Successfully connected to database'.green);
             resolve(db);
         });
         db.on('error', () => {
