@@ -3,7 +3,7 @@ mongoose.set('useNewUrlParser', true);
 
 const colors = require('colors');
 
-const url = "mongodb://localhost:27017";
+const url = "mongodb+srv://alex:LymeReg1s@mobileandweb-xvnbd.mongodb.net";
 
 const dbName = 'MobileAndWeb';
 

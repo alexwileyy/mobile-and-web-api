@@ -56,6 +56,9 @@ exports.getTask = async function(userId, taskId){
                 if(err){
                     resolve(err);
                 }
+                if(!result){
+                    reject(result);
+                }
                 resolve(result);
             });
 
@@ -90,7 +93,6 @@ exports.createTask = async function(userId, taskName){
 
             newTask.save((err, newTask) => {
                 if(err){
-                    console.log(err);
                     reject(err);
                 }
                 resolve(newTask);
@@ -123,7 +125,17 @@ exports.createSubTask = async function(userId, taskId, subtasks){
                 update = [subtasks];
             }
 
-            update.map(item => item.id = uuidv1());
+            update.map(item => {
+                const date = new Date();
+                let day = date.getDate(),
+                    month = date.getMonth() + 1;
+                day = day <= 9 ? `0${day}` : day;
+                month = month <= 9 ? `0${month}` : month;
+                item.id = uuidv1();
+                item.createdOn = `${day}/${month}/${date.getUTCFullYear()}`;
+                item.status = "in-progress";
+                return item;
+            });
 
             TaskModel.findOneAndUpdate({_id: taskId, userId}, {$push: {subTasks: update}}, (err, done) => {
                 if(err){
@@ -156,6 +168,9 @@ exports.updateTask = (userId, taskId, body) => {
             TaskModel.findOneAndUpdate({_id: taskId, userId}, {...body}, (err, doc)=>{
                 if(err){
                     reject(err);
+                }
+                if(!doc){
+                    reject("Document not found.")
                 }
                 resolve(doc);
             })

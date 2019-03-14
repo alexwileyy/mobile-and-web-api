@@ -3,6 +3,7 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const assert = require('assert');
 const app = require('../app.js');
+const helpers = require('./helpers');
 
 // Configure chai
 // Configure chai
@@ -19,7 +20,7 @@ describe("Users", () => {
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
-                    res.body.should.have.property("date").and.equal("Wed Mar 13 2019");
+                    res.body.should.have.property("date").and.equal(helpers.getTodaysDate());
                     done();
                 });
         });

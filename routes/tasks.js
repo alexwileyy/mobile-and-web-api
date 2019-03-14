@@ -5,7 +5,7 @@ const mongo = require('mongodb');
 // Import tasks model from  models directory
 const taskModel = require('../models/tasks');
 
-/* GET tasks listing for a given user. */
+/* GET all tasks listing for a given user. */
 router.get('/:userId', async function(req, res, next) {
 
   // Get the user ID from the query params
@@ -101,8 +101,6 @@ router.post('/:userId/:taskId', async (req, res, next) => {
 
   // Get body from request
   const body = req.body;
-
-  console.log(body);
 
   // Get user ID from query param (http://localhost:3000/tasks/{userId}})
   const userId = req.params['userId'];
