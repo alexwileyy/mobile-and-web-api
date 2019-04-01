@@ -78,12 +78,12 @@ describe("Tasks", () => {
                 .post('/tasks/1/5c8a5e625107375eb622be09')
                 .send([
                     {
-                        "taskName" : "Hello",
+                        "taskName" : "Eggs",
                         "createdOn" : "26/02/19",
                         "status" : "in-progress"
                     },
                     {
-                        "taskName" : "World",
+                        "taskName" : "Milk",
                         "createdOn" : "26/02/19",
                         "status" : "in-progress"
                     }
@@ -100,9 +100,9 @@ describe("Tasks", () => {
 
         it("update a task for a given user", (done) => {
             chai.request(app)
-                .patch('/tasks/1/5c8a5e625107375eb622be09')
+                .put('/tasks/1/5c8a5e625107375eb622be09')
                 .send({
-                    taskName: "New task name"
+                    taskName: "Go shopping"
                 })
                 .end((err, res) => {
                     const body = res.body;
@@ -111,7 +111,7 @@ describe("Tasks", () => {
                     body.should.be.a('object');
                     body.should.have.property("date").and.equal(helpers.getTodaysDate());
                     body.should.have.property("payload").and.be.a("object");
-                    payload.should.have.property("taskName").to.equal("New task name");
+                    payload.should.have.property("taskName").to.equal("Go shopping");
                     payload.should.have.property("subTasks");
                     payload.should.have.property("_id");
                     payload.should.have.property("userId");
@@ -123,7 +123,7 @@ describe("Tasks", () => {
 
         it("update a sub-task for a given user", (done) => {
             chai.request(app)
-                .patch('/tasks/1/5c8a5e625107375eb622be09/04eb7570-4662-11e9-8c5f-df0c2f14888c')
+                .put('/tasks/1/5c8a5e625107375eb622be09/04eb7570-4662-11e9-8c5f-df0c2f14888c')
                 .send({
                     taskName: "New task name"
                 })
@@ -134,7 +134,7 @@ describe("Tasks", () => {
                     body.should.be.a('object');
                     body.should.have.property("date").and.equal(helpers.getTodaysDate());
                     body.should.have.property("payload").and.be.a("object");
-                    payload.should.have.property("taskName").to.equal("New task name");
+                    payload.should.have.property("taskName").to.equal("Go shopping");
                     payload.should.have.property("subTasks");
                     payload.should.have.property("_id");
                     payload.should.have.property("userId");

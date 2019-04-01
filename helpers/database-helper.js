@@ -1,9 +1,7 @@
 const mongoose = require('mongoose');
 mongoose.set('useNewUrlParser', true);
 
-const colors = require('colors');
-
-const url = "mongodb+srv://alex:LymeReg1s@mobileandweb-xvnbd.mongodb.net";
+const url = process.env.MONGO_URI || "mongodb+srv://alex:LymeReg1s@mobileandweb-xvnbd.mongodb.net";
 
 const dbName = 'MobileAndWeb';
 

@@ -1,6 +1,5 @@
-var express = require('express');
-var router = express.Router();
-const mongo = require('mongodb');
+const express = require('express');
+const router = express.Router();
 
 // Import tasks model from  models directory
 const taskModel = require('../models/tasks');
@@ -9,12 +8,7 @@ const taskModel = require('../models/tasks');
 router.get('/:userId', async function(req, res, next) {
 
   // Get the user ID from the query params
-  let userId = parseInt(req.params['userId']);
-
-  // Check to see whether the user ID is an integrer value
-  if(isNaN(userId)){
-    return res.sendResponse(422, {msg: 'The User ID parameter must be an integer value.'});
-  }
+  let userId = req.params['userId'];
 
   // Check to see wherher the user ID value has been provided
   if(!userId){
@@ -45,12 +39,7 @@ router.get('/:userId/:taskId', async (req, res, next) => {
   let userId = parseInt(req.params['userId']);
 
   // Get the user ID from the query params
-  let taskId = new mongo.ObjectID(req.params['taskId']);
-
-  // Check to see whether the user ID is an integrer value
-  if(isNaN(userId)){
-    return res.sendResponse(422, {msg: 'The User ID parameter must be an integer value.'});
-  }
+  let taskId = req.params['taskId'];
 
   // Log out to log file
   res.logger.info(`Getting task (${taskId}) for user ${userId}.`);
@@ -81,6 +70,10 @@ router.post('/:userId', async (req, res, next) => {
 
   // Get task name from body
   const taskName = body['taskName'];
+
+  if(!taskName){
+    res.sendResponse(400, "A task name must be provided.");
+  }
 
   try {
     // Call the getAllUsers method on the userModel to retrieve the data from the database.
@@ -125,7 +118,7 @@ router.post('/:userId/:taskId', async (req, res, next) => {
 });
 
 /* Update a task for a given user. */
-router.patch('/:userId/:taskId', async (req, res, next) => {
+router.put('/:userId/:taskId', async (req, res, next) => {
 
   // Get user ID from query param (http://localhost:3000/tasks/{userId}})
   const userId = req.params['userId'];
@@ -154,7 +147,7 @@ router.patch('/:userId/:taskId', async (req, res, next) => {
 });
 
 /* Update a subtask for a given user. */
-router.patch('/:userId/:taskId/:subtaskId', async (req, res, next) => {
+router.put('/:userId/:taskId/:subtaskId', async (req, res, next) => {
 
   // Get user ID from query param (http://localhost:3000/tasks/{userId}})
   const userId = req.params['userId'];

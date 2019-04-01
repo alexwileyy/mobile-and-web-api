@@ -2,10 +2,10 @@ const mongoose = require('mongoose');
 const uuidv1 = require('uuid/v1');
 
 const taskSchema = mongoose.Schema({
-    userId : Number,
-    taskName : String,
+    userId : { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    title : String,
     createdOn : String,
-    status : String,
+    status : Boolean,
     subTasks: Array
 }, {collection: 'Tasks'});
 
@@ -51,16 +51,14 @@ exports.getTask = async function(userId, taskId){
     return new Promise(async (resolve, reject)=>{
 
         try{
-
-            TaskModel.findById(taskId).exec((err, result) => {
-                if(err){
-                    resolve(err);
-                }
-                if(!result){
-                    reject(result);
-                }
-                resolve(result);
-            });
+            const task = await TaskModel
+                .findOne({_id: taskId})
+                .populate("userId")
+                .exec();
+            if(!task){
+                resolve([]);
+            }
+            resolve(task);
 
         } catch(err){
             reject(err);
@@ -81,13 +79,12 @@ exports.createTask = async function(userId, taskName){
     return new Promise(async (resolve, reject)=>{
 
         try{
-
             // Create a new object with the data that will be stored to the database.
             const newTask = new TaskModel({
-                userId: parseInt(userId),
-                taskName,
+                userId,
+                title: taskName,
                 createdOn: '26/02/19',
-                status: 'in-progress',
+                status: false,
                 subTasks: []
             });
 

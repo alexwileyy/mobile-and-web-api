@@ -9,6 +9,8 @@ const userSchema = mongoose.Schema({
 
 const userModel = mongoose.model("User", userSchema);
 
+exports.userModel = userModel;
+
 /**
  * Get all users from the Users table.
  * @returns {Promise<*>}
