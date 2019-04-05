@@ -26,7 +26,7 @@ app.use(cors());
 
 app.use(sender.addSenderUtility);
 app.use(logger.addLogger);
-app.use(db.addDatabaseConnection);
+// app.use(db.addDatabaseConnection);
 
 app.use('/', index);
 app.use('/users', usersRouter);
