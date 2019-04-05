@@ -6,6 +6,7 @@ const cors = require('cors');
 
 const usersRouter = require('./routes/users');
 const taskrouter = require('./routes/tasks');
+const index = require('./routes/index');
 
 const sender = require('./middleware/sender-middleware');
 const logger = require('./middleware/logger-middleware');
@@ -27,6 +28,7 @@ app.use(sender.addSenderUtility);
 app.use(logger.addLogger);
 app.use(db.addDatabaseConnection);
 
+app.use('/', index);
 app.use('/users', usersRouter);
 app.use('/tasks', taskrouter);
 
