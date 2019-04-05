@@ -4,6 +4,10 @@ const router = express.Router();
 // Import tasks model from  models directory
 const taskModel = require('../models/tasks');
 
+router.get('/', (req, res) => {
+  res.send("Working in tasks");
+});
+
 /* GET all tasks listing for a given user. */
 router.get('/:userId', async function(req, res, next) {
 

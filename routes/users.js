@@ -3,6 +3,10 @@ var router = express.Router();
 
 const userModel = require('../models/users');
 
+router.get('/test', (req, res) => {
+  res.send("Working in users");
+});
+
 /* GET users listing. */
 router.get('/', async function(req, res, next) {
 
@@ -12,7 +16,7 @@ router.get('/', async function(req, res, next) {
     const getUsers = await userModel.getAllUsers();
 
     // Send the data back to the client.
-    res.sendResponse(200, {});
+    res.sendResponse(200, getUsers);
 
   } catch(err){
     // Send errors
