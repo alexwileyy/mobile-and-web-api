@@ -4,7 +4,7 @@ var router = express.Router();
 const userModel = require('../models/users');
 
 router.get('/test', (req, res) => {
-  res.send("Working in users");
+  res.send("Working in Users from Amazon EC2 instace.");
 });
 
 /* GET users listing. */
